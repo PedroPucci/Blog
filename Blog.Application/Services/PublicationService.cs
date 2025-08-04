@@ -54,14 +54,53 @@ namespace Blog.Application.Services
             }
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            using var transaction = _repositoryUoW.BeginTransaction();
+            try
+            {
+                var publication = await _repositoryUoW.PublicationRepository.GetById(id);
+                if (publication is not null)
+                {
+                    _repositoryUoW.PublicationRepository.Delete(publication);
+                }
+
+                await _repositoryUoW.SaveAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogMessages.DeletePublicationError(ex));
+                transaction.Rollback();
+                throw new InvalidOperationException("Error to delete a publication.");
+            }
+            finally
+            {
+                Log.Error(LogMessages.DeletePublicationSuccess());
+                transaction.Dispose();
+            }
         }
 
-        public Task<List<PublicationEntity>> Get()
+        public async Task<List<PublicationEntity>> Get()
         {
-            throw new NotImplementedException();
+            using var transaction = _repositoryUoW.BeginTransaction();
+            try
+            {
+                List<PublicationEntity> publications = await _repositoryUoW.PublicationRepository.Get();
+                _repositoryUoW.Commit();
+                return publications;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogMessages.GetPublicationError(ex));
+                transaction.Rollback();
+                throw new InvalidOperationException("Error to loading the list Publications");
+            }
+            finally
+            {
+                Log.Error(LogMessages.GetPublicationSuccess());
+                transaction.Dispose();
+            }
         }
 
         public async Task<Result<PublicationEntity>> Update(PublicationDto publicationDto)

@@ -1,4 +1,6 @@
-﻿namespace Blog.Shared.Logging
+﻿using System;
+
+namespace Blog.Shared.Logging
 {
     public static class LogMessages
     {
@@ -17,5 +19,9 @@
         public static string AddingPublicationSuccess() => "Message: Successfully added a new Publication.";
         public static string UpdatingErrorPublication(Exception ex) => $"Message: Error updating Publication: {ex.Message}";
         public static string UpdatingSuccessPublication() => "Message: Successfully updated Publication.";
+        public static string GetPublicationSuccess() => "Message: Get with success Publication.";
+        public static string GetPublicationError(Exception ex) => "Message: Get with error Publication.";
+        public static string DeletePublicationError(Exception ex) => $"Message: Error to delete a Publication: {ex.Message}";
+        public static string DeletePublicationSuccess() => "Message: Delete with success Publication.";
     }
 }
