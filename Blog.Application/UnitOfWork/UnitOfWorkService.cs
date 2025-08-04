@@ -1,11 +1,14 @@
 ﻿using Blog.Application.Services;
+using Blog.Extensions.Hubs;
 using Blog.Infrastracture.RepositoryUoW;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Blog.Application.UnitOfWork
 {
     public class UnitOfWorkService : IUnitOfWorkService
     {
         private readonly IRepositoryUoW _repositoryUoW;
+        private readonly IHubContext<NotificationHub> _hubContext;
         //private readonly TokenService _tokenService;
         //private readonly BCryptoAlgorithm _crypto;
 
@@ -19,9 +22,10 @@ namespace Blog.Application.UnitOfWork
         //    _crypto = crypto;
         //}
 
-        public UnitOfWorkService(IRepositoryUoW repositoryUoW)
+        public UnitOfWorkService(IRepositoryUoW repositoryUoW, IHubContext<NotificationHub> hubContext)
         {
             _repositoryUoW = repositoryUoW;
+            _hubContext = hubContext;
         }
 
         public UserService UserService
@@ -39,7 +43,7 @@ namespace Blog.Application.UnitOfWork
             get
             {
                 if (publicationService is null)
-                    publicationService = new PublicationService(_repositoryUoW);
+                    publicationService = new PublicationService(_repositoryUoW, _hubContext);
                 return publicationService;
             }
         }

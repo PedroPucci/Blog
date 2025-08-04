@@ -2,10 +2,11 @@
 using Blog.Application.Services.Interfaces;
 using Blog.Domain.Dto;
 using Blog.Domain.Entity;
+using Blog.Extensions.Hubs;
 using Blog.Infrastracture.RepositoryUoW;
 using Blog.Shared.Logging;
 using Blog.Shared.Validator;
-using FluentValidation;
+using Microsoft.AspNetCore.SignalR;
 using Serilog;
 
 namespace Blog.Application.Services
@@ -13,10 +14,12 @@ namespace Blog.Application.Services
     public class PublicationService : IPublicationService
     {
         private readonly IRepositoryUoW _repositoryUoW;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public PublicationService(IRepositoryUoW repositoryUoW)
+        public PublicationService(IRepositoryUoW repositoryUoW, IHubContext<NotificationHub> hubContext)
         {
             _repositoryUoW = repositoryUoW;
+            _hubContext = hubContext;
         }
 
         public async Task<Result<PublicationEntity>> Add(PublicationEntity publicationEntity)
@@ -38,7 +41,7 @@ namespace Blog.Application.Services
 
                 await _repositoryUoW.SaveAsync();
                 await transaction.CommitAsync();
-
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", "Nova publicação disponível!");
                 return Result<PublicationEntity>.Ok();
             }
             catch (Exception ex)

@@ -1,8 +1,10 @@
 ﻿using Blog.Application.Services;
 using Blog.Domain.Dto;
 using Blog.Domain.Entity;
+using Blog.Extensions.Hubs;
 using Blog.Infrastracture.Repository.Interfaces;
 using Blog.Infrastracture.RepositoryUoW;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
 
@@ -13,6 +15,7 @@ namespace Blog.Test.Service
         private readonly Mock<IRepositoryUoW> _repositoryUoWMock;
         private readonly Mock<IPublicationRepository> _publicationRepositoryMock;
         private readonly PublicationService _publicationService;
+        private readonly Mock<IHubContext<NotificationHub>> _hubContextMock;
 
         public PublicationServiceTests()
         {
@@ -21,8 +24,10 @@ namespace Blog.Test.Service
 
             _repositoryUoWMock.Setup(x => x.PublicationRepository).Returns(_publicationRepositoryMock.Object);
             _repositoryUoWMock.Setup(x => x.BeginTransaction()).Returns(Mock.Of<IDbContextTransaction>());
+            _hubContextMock = new Mock<IHubContext<NotificationHub>>();
 
-            _publicationService = new PublicationService(_repositoryUoWMock.Object);
+
+            _publicationService = new PublicationService(_repositoryUoWMock.Object, _hubContextMock.Object);
         }
 
         [Fact]

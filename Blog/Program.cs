@@ -1,11 +1,16 @@
 ﻿using Blog.Exrensions;
 using Blog.Extensions.ExtensionsLogs;
+using Blog.Extensions.Hubs;
 using Blog.Infrastracture.Connections;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Adiciona serviços do SignalR
+builder.Services.AddSignalR();
+
+
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -99,5 +104,10 @@ catch (Exception ex)
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(ex, "An error occurred during migration!");
 }
+
+app.UseRouting();
+
+// Endpoint para o hub
+app.MapHub<NotificationHub>("/notificationhub");
 
 app.Run();
