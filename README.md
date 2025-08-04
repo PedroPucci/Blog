@@ -1,4 +1,4 @@
-# TrainMaster
+# Blog
 
 # **Descrição do projeto**
 - Crie um sistema básico de blog onde os usuários podem visualizar, criar, editar e excluir postagens. 
