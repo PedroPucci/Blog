@@ -1,6 +1,7 @@
 ﻿using Blog.Domain.Entity;
 using Blog.Infrastracture.Connections;
 using Blog.Infrastracture.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Infrastracture.Repository
 {
@@ -13,19 +14,41 @@ namespace Blog.Infrastracture.Repository
             _context = context;
         }
 
-        public Task<UserEntity> Add(UserEntity userEntity)
+        public async Task<UserEntity> Add(UserEntity userEntity)
         {
-            throw new NotImplementedException();
+            if (userEntity is null)
+                throw new ArgumentNullException(nameof(userEntity), "User cannot be null");
+
+            var result = await _context.UserEntity.AddAsync(userEntity);
+            await _context.SaveChangesAsync();
+
+            return result.Entity;
         }
 
         public UserEntity Delete(UserEntity userEntity)
         {
-            throw new NotImplementedException();
+            if (userEntity == null)
+                throw new ArgumentNullException(nameof(userEntity), "User cannot be null");
+
+            var entity = _context.UserEntity.Find(userEntity.Id);
+            if (entity == null)
+                throw new KeyNotFoundException($"No User found with ID {userEntity.Id}");
+
+            _context.UserEntity.Remove(userEntity);
+            _context.SaveChanges();
+
+            return entity;
         }
 
         public UserEntity Update(UserEntity userEntity)
         {
-            throw new NotImplementedException();
+            var response = _context.UserEntity.Update(userEntity);
+            return response.Entity;
+        }
+
+        public async Task<UserEntity?> GetById(int? id)
+        {
+            return await _context.UserEntity.FirstOrDefaultAsync(userEntity => userEntity.Id == id);
         }
     }
 }

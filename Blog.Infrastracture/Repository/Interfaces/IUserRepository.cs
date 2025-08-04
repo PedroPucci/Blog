@@ -7,5 +7,6 @@ namespace Blog.Infrastracture.Repository.Interfaces
         Task<UserEntity> Add(UserEntity userEntity);
         UserEntity Update(UserEntity userEntity);
         UserEntity Delete(UserEntity userEntity);
+        Task<UserEntity?> GetById(int? id);
     }
 }

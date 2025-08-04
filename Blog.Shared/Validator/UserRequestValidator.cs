@@ -16,6 +16,16 @@ namespace Blog.Shared.Validator
                     .WithMessage(UserErrors.User_Error_EmailLenghtLessFour.Description())
                 .Matches(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
                         .WithMessage(UserErrors.User_Error_InvalidEmailFormat.Description());
+
+            RuleFor(p => p.Name)
+                .NotEmpty()
+                    .WithMessage(UserErrors.User_Error_NameCanNotBeNullOrEmpty.Description())
+                .MinimumLength(3)
+                    .WithMessage(UserErrors.User_Error_NameTooShort.Description())
+                .MaximumLength(100)
+                    .WithMessage(UserErrors.User_Error_NameTooLong.Description())
+                .Matches(@"^[A-Za-zÀ-ÿ\s]+$")
+                    .WithMessage(UserErrors.User_Error_NameInvalidCharacters.Description());
         }
     }
 }

@@ -8,5 +8,6 @@ namespace Blog.Infrastracture.Repository.Interfaces
         PublicationEntity Update(PublicationEntity publicationEntity);
         PublicationEntity Delete(PublicationEntity publicationEntity);
         Task<List<PublicationEntity>> Get();
+        Task<PublicationEntity?> GetById(int? id);
     }
 }

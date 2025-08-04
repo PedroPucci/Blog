@@ -61,5 +61,10 @@ namespace Blog.Infrastracture.Repository
             var response = _context.PublicationEntity.Update(publicationEntity);
             return response.Entity;
         }
+
+        public async Task<PublicationEntity?> GetById(int? id)
+        {
+            return await _context.PublicationEntity.FirstOrDefaultAsync(publicationEntity => publicationEntity.Id == id);
+        }
     }
 }

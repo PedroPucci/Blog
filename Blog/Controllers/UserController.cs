@@ -35,7 +35,7 @@ namespace Blog.Controllers
         public async Task<IActionResult> Update([FromBody] UserDto userDto)
         {
             var result = await _serviceUoW.UserService.Update(userDto);
-            return result.Success ? Ok(result) : BadRequest(userDto);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
         }
     }
 }

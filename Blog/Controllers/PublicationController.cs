@@ -1,4 +1,5 @@
 ﻿using Blog.Application.UnitOfWork;
+using Blog.Domain.Dto;
 using Blog.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,12 +31,12 @@ namespace Blog.Controllers
         [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update([FromBody] PublicationEntity publicationEntity)
+        public async Task<IActionResult> Update([FromBody] PublicationDto publicationDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _serviceUoW.PublicationService.Update(publicationEntity);
+            var result = await _serviceUoW.PublicationService.Update(publicationDto);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 

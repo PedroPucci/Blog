@@ -35,6 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Blog.Domain\Blog.Domain.csproj" />
     <ProjectReference Include="..\Blog.Infrastracture\Blog.Infrastracture.csproj" />
+    <ProjectReference Include="..\Blog.Shared\Blog.Shared.csproj" />
   </ItemGroup>
 
 </Project>
